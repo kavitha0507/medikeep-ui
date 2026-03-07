@@ -5,12 +5,20 @@
   --foreground: #171717;
 }
 
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Add your MediKeep High-Contrast Colors here */
+  --color-med-primary: #003366;
+  --color-med-success: #22C55E;
+  --color-med-alert: #EF4444;
+  --color-med-bg: #F8FAFC;
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
