@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Trash2, Volume2, Check } from 'lucide-react'; // Added missing imports
 
 export default function Home() {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
   const [medications, setMedications] = useState([]);
   const [name, setName] = useState('');
   const [dosage, setDosage] = useState('');
