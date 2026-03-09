@@ -1,23 +1,73 @@
+// 'use client';
+
+// import { useEffect, useState } from 'react';
+// import { Trash2, Volume2, Check } from 'lucide-react'; // Added missing imports
+
+// export default function Home() {
+//   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+//   const [medications, setMedications] = useState([]);
+//   const [name, setName] = useState('');
+//   const [dosage, setDosage] = useState('');
+//   const [time, setTime] = useState('');
+
+//   // 1. Fetch data from Spring Boot
+//   // useEffect(() => {
+//   //   fetch('http://localhost:8080/api/medications')
+//   //     .then((res) => res.json())
+//   //     .then((data) => setMedications(data))
+//   //     .catch((err) => console.error("Check if Backend is running!", err));
+//   // }, []);
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Trash2, Volume2, Check } from 'lucide-react'; // Added missing imports
+ import { useEffect, useState } from 'react';
+ import { Trash2, Volume2, Check } from 'lucide-react';
+
+// 1. ADD THIS INTERFACE ABOVE THE FUNCTION
+interface Medication {
+  id: number;
+  name: string;
+  dosage: string;
+  reminderTime: string;
+  isTaken: boolean;
+  taken?: boolean;  // Support for your existing logic
+  takenAt?: string; // Support for our new timestamp
+}
 
 export default function Home() {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
-  const [medications, setMedications] = useState([]);
+
+  // 2. UPDATE THIS LINE TO USE THE INTERFACE
+  const [medications, setMedications] = useState<Medication[]>([]);
+  
   const [name, setName] = useState('');
   const [dosage, setDosage] = useState('');
   const [time, setTime] = useState('');
 
-  // 1. Fetch data from Spring Boot
+  // 3. UPDATED USEEFFECT WITH DEMO DATA
   useEffect(() => {
-    fetch('http://localhost:8080/api/medications')
-      .then((res) => res.json())
-      .then((data) => setMedications(data))
-      .catch((err) => console.error("Check if Backend is running!", err));
-  }, []);
+    const fetchMeds = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/medications`);
+        if (res.ok) {
+          const data = await res.json();
+          setMedications(data);
+        } else {
+          throw new Error("Backend offline");
+        }
+      } catch (err) {
+        // This runs if your backend is off (like on Vercel)
+        console.log("Using Demo Mode Data");
+        setMedications([
+          { id: 101, name: "Vitamin D3", dosage: "2000IU", reminderTime: "09:00 AM", isTaken: true, takenAt: new Date().toISOString() },
+          { id: 102, name: "Omega-3", dosage: "1000mg", reminderTime: "12:00 PM", isTaken: false },
+          { id: 103, name: "Calcium", dosage: "500mg", reminderTime: "08:00 PM", isTaken: false }
+        ]);
+      }
+    };
+    fetchMeds();
+  }, [API_BASE]);
 
+  // ... (rest of your functions like addMedication, deleteMedication, etc.)
   // 2. Add Medication
   const addMedication = async (e: any) => {
     e.preventDefault();
